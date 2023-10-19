@@ -16,7 +16,9 @@ import {
   useColorScheme,
   View,
   Image,
-  Dimensions
+  Dimensions,
+  ActivityIndicator,
+  Button
 } from 'react-native';
 
 import {
@@ -70,7 +72,10 @@ function App(): JSX.Element {
 
   useEffect(()=>{
 
-    productAPI();
+    setTimeout(() => {
+      productAPI();
+    }, 10000);
+    
   },[])
 
   const productAPI = () =>{
@@ -84,6 +89,13 @@ function App(): JSX.Element {
 
   }
 
+  if(products.length==0)
+    {
+      return(<View style={{justifyContent:'center',flex:1}}>
+        <ActivityIndicator size={'large'} color={'deeppink'} />
+      </View>)
+    }
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
@@ -93,26 +105,28 @@ function App(): JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
-        {products && products.map((value:any,Index)=>{
-          return(
-            <View
-            key={Index}
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}>
-            <Image
-              style={styles.stretch}
-              source={{
-                uri: value.image,
-              }}
-            />
-            <Text>{value.title}</Text>
-            <Text>{value.price}</Text>
-          </View>
-          );
-        })}
-       
+        <Text style={styles.headers}>DealsCart</Text>
+        {
+          products && products.map((value:any,Index)=>{
+            return(
+              <View
+              key={Index}
+              style={{
+                backgroundColor: isDarkMode ? Colors.black : Colors.white,
+              }}>
+              <Image
+                style={styles.stretch}
+                source={{
+                  uri: value.image,
+                }}
+              />
+              <Text>{value.title}</Text>
+              <Text>{value.price}</Text>
+              <Button color={'rgb(33, 150, 243)'} title='View' />
+            </View>
+            );
+          })
+        } 
       </ScrollView>
     </SafeAreaView>
   );
@@ -142,6 +156,11 @@ const styles = StyleSheet.create({
     height: 300,
     resizeMode: 'stretch',
   },
+  headers:{
+    fontSize:20,
+    textAlign:'center',
+    color:'deeppink'
+  }
 });
 
 export default App;
